@@ -43,4 +43,5 @@ The main directory hosts code that operates on the latest version of BFI
 The old directory can be used on the old version with the old naming convention
 specifically "Ch1L-" (old) versus "CH1L_" (new)
 
-
+# Old2
+This holds versions that operates on BFI versions that are after "old" but before the 2L & 3L flavor consoldation
