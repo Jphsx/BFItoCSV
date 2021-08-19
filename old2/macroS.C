@@ -77,9 +77,9 @@ TH1D* sumBG(std::vector<TH1D*> hvec){
 	
 
 }
-void loopBin(TH1D* h,int nbinsx, std::string str, ofstream& fstream, std::string regionName, int nl, int nj){
-	//fstream<<str<<" ";
-	/*for(int j=1; j<=nbinsx; j++){
+void loopBin(TH1D* h,int nbinsx, std::string str, ofstream& fstream,  std::string regionName, int nl, int nj){
+	/*fstream<<str<<" ";
+	for(int j=1; j<=nbinsx; j++){
 			if( h != NULL ){
                         	fstream<<h->GetBinContent(j)<<"+/-"<<h->GetBinError(j)<<" ";
                         }
@@ -95,16 +95,16 @@ void loopBin(TH1D* h,int nbinsx, std::string str, ofstream& fstream, std::string
 	}
 	fstream<<std::endl;
 	*/
-	//"RegionName PType BinN NL NJ Yield Error
 	for(int j=1; j<=nbinsx; j++){
-		fstream<<regionName<<" "<<str<<" "<<j<<" "<<nl<<" "<<nj<<" ";
-		if( h != NULL ){
-			fstream<<h->GetBinContent(j)<<" "<<h->GetBinError(j)<<"\n";
-		}
-		if( h==NULL){
-			fstream<< "-999 0\n";
-		}
-	}
+                fstream<<regionName<<" "<<str<<" "<<j<<" "<<nl<<" "<<nj<<" ";
+                if( h != NULL ){
+                        fstream<<h->GetBinContent(j)<<" "<<h->GetBinError(j)<<
+"\n";
+                }
+                if( h==NULL){
+                        fstream<< "-1 0\n";
+                }
+        }	
 }
 
 int IDJets( std::string jstring ){
@@ -262,25 +262,13 @@ void unrollBins(vector<vector<double> > bins, ofstream& fstream ){
 	}
 	fstream<<std::endl;
 }
-void macroBG(std::string chnlName, int chnlnum){
-	//
-	//read in TCHIWZ which has BG rolled into it for bg readouts	
-//	TFile* f = TFile::Open("BFS_TChiWZ.root");
-//	TFile* f = TFile::Open("BFS_TChiWZ_MBIN2.root");
-//        TFile* f = TFile::Open("BFS_2l2J_MBINAdjust.root");
-//	TFile* f = TFile::Open("BFS_2L_1j2j3jconsol_TChiWZ.root");
-//        TFile* f = TFile::Open("BFI_B1-2_2016.root");
-//	TFile* f = TFile::Open("BFI_B4-2_2018.root");
-	//TFile* f = TFile::Open("./BFS_2L1J_Consolidation/BFS_B1-3_TChiWZ.root");
-	//TFile* f = TFile::Open("./BFS_2L1J_Consolidation/BFS_B2-2_TChiWZ.root");
-//	TFile* f = TFile::Open("./BFS_2L1J_Consolidation/BFS_B1-1_TChiWZ.root");
-//	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-4_TChiWZ.root");
-//	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-5_BKG.root");
-//	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-6_BKG.root");
-	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-7_TChiWZ.root");
-//	TFile* f2 = TFile::Open("BFI_batch_T2tt_all.root");
-//	TFile* f3 = TFile::Open("BFI_batch_TSlepSlep_all.root");
-//	TFile* f4 = TFile::Open("BFI_batch_T2bW_all.root");
+void macroS(std::string chnlName, int chnlnum, std::string rfilename){
+
+	TFile* f = TFile::Open(rfilename.c_str());
+	//TFile* f = TFile::Open("BFI_batch_TChiWZ_all.root");
+	//TFile* f2 = TFile::Open("BFI_batch_T2tt_all.root");
+	//TFile* f3 = TFile::Open("BFI_batch_TSlepSlep_all.root");
+	//TFile* f4 = TFile::Open("BFI_batch_T2bW_all.root");
 
 	TList* list = f->GetListOfKeys();
 //	TList* list2 = f2->GetListOfKeys();
@@ -288,7 +276,7 @@ void macroBG(std::string chnlName, int chnlnum){
 	std::set<std::string> jets;
 	std::vector<std::string> str_list;
 //	std::vector<std::string> str_list2;
-	//std::string channelName = "Ch3L";   ///change this
+//	std::string channelName = "Ch3L";   ///change this
 //	int CHANNELNUM = 3;                 ///and change this per run
 	std::string channelName = chnlName;
 	int CHANNELNUM = chnlnum;
@@ -308,7 +296,7 @@ void macroBG(std::string chnlName, int chnlnum){
 	ofstream regionfile;
 	regionfile.open(str_list[i]+".csv");
 		
-//		regionfile<<str_list[i]<<std::endl;
+	//	regionfile<<str_list[i]<<std::endl;
 		vector<string> sp1 = split(std::string(str_list[i]), '_');
 		//vector<string> sp2 = split(sp1[1],'-');
 		vector<string> sp2 = sp1;
@@ -316,20 +304,18 @@ void macroBG(std::string chnlName, int chnlnum){
 
 		//header csv
 		regionfile<<"RegionName PType BinN NL NJ Yield Error\n";
-		
 		vector<vector<double> > bins;
 		int nj;
 		if(CHANNELNUM == 0){
-		//bins = mapbins(CHANNELNUM, IDJets(sp2[1]));
-			nj = IDJets(sp2[2]);
+	//	bins = mapbins(CHANNELNUM, IDJets(sp2[1]));
+		nj = IDJets(sp2[2]);
 		}
 		else{
 		//bins = mapbins(CHANNELNUM, IDJets(sp2[2]));
-			nj = IDJets(sp2[3]);
+		nj = IDJets(sp2[3]);
 		}
-		 //unrollBins( bins,regionfile);
-	
-	 	 //regionfile<<"RISRBIN ";
+		// unrollBins( bins,regionfile);
+		//regionfile<<"RISRBIN ";
 		//vector<string> bins;	
 		//bins = risrmap[sp2[2]];
 		/*for(int i=0; i<bins.size(); i++){
@@ -344,20 +330,31 @@ void macroBG(std::string chnlName, int chnlnum){
 		regionfile<<std::endl;*/
 
 //modify for this to collect only BG	
-		TH1D* data_obs = (TH1D*) f->Get((str_list[i]+"/data_obs").c_str());
+	//	TH1D* data_obs = (TH1D*) f->Get((str_list[i]+"/data_obs").c_str());
 //		ttbar ST ZDY DB Wjets TB QCD
-		TH1D* ttbar = collectBG(f,str_list[i]+"/ttbar");
-		TH1D* ST    = collectBG(f, str_list[i]+"/ST");
-		TH1D* ZDY   = collectBG(f, str_list[i]+"/ZDY");
-		TH1D* DB    = collectBG(f, str_list[i]+"/DB");
-		TH1D* Wjets = collectBG(f, str_list[i]+"/Wjets");
-		TH1D* TB    = collectBG(f, str_list[i]+"/TB");
-		TH1D* QCD   = collectBG(f, str_list[i]+"/QCD");
+	//	TH1D* ttbar = collectBG(f,str_list[i]+"/ttbar");
+	//	TH1D* ST    = collectBG(f, str_list[i]+"/ST");
+	//	TH1D* ZDY   = collectBG(f, str_list[i]+"/ZDY");
+	//	TH1D* DB    = collectBG(f, str_list[i]+"/DB");
+	//	TH1D* Wjets = collectBG(f, str_list[i]+"/Wjets");
+	//	TH1D* TB    = collectBG(f, str_list[i]+"/TB");
+	//	TH1D* QCD   = collectBG(f, str_list[i]+"/QCD");
 		
-		vector<TH1D*> allbgs = {ttbar, ST, ZDY, DB, Wjets, TB, QCD};
-		TH1D* bgsum = sumBG(allbgs);
+	//	vector<TH1D*> allbgs = {ttbar, ST, ZDY, DB, Wjets, TB, QCD};
+	//	TH1D* bgsum = sumBG(allbgs);
 
-/*		TH1D* TChiWZ_2750268 = (TH1D*) f->Get((str_list[i]+"/TChiWZ_2750268").c_str());
+		 //get the entire grid and put it into a set
+		TDirectory* dir = (TDirectory*) f->Get(str_list[i].c_str());
+		TList* hist_list = dir->GetListOfKeys();
+		std::vector<TH1D*> hist_grid{};
+		std::vector<std::string> grid_hnames{};
+		for(int j=0; j<hist_list->GetSize(); j++){
+			hist_grid.push_back( (TH1D*) f->Get((str_list[i]+"/"+hist_list->At(j)->GetName()).c_str()) );
+			grid_hnames.push_back( std::string( hist_list->At(j)->GetName() ) );
+		}
+		
+
+		/*TH1D* TChiWZ_2750268 = (TH1D*) f->Get((str_list[i]+"/TChiWZ_2750268").c_str());
 		TH1D* TChiWZ_2750235 = (TH1D*) f->Get((str_list[i]+"/TChiWZ_2750235").c_str());
 		TH1D* TChiWZ_2750183 = (TH1D*) f->Get((str_list[i]+"/TChiWZ_2750183").c_str());
 
@@ -375,30 +372,32 @@ void macroBG(std::string chnlName, int chnlnum){
 		TH1D* T2bW_3500270 = (TH1D*) f4->Get((str_list[i]+"/T2bW_3500270").c_str());
 		TH1D* T2bW_3500300 = (TH1D*) f4->Get((str_list[i]+"/T2bW_3500300").c_str());
 		TH1D* T2bW_3500340 = (TH1D*) f4->Get((str_list[i]+"/T2bW_3500340").c_str());
+		*/
 
-*/
-//void loopBin(TH1D* h,int nbinsx, std::string str, ofstream& fstream, std::stri
-//ng regionName, int nl, int nj)
-		//dataobs appears to not be present in shape?
-		
-		//loop all bgs, find non null and get nbinsx
-		for(int i=0; i<allbgs.size(); i++){
-			if(allbgs.at(i) != NULL){
-				nbinsx = allbgs.at(i)->GetNbinsX();
-				break;	
-			}	
-		}
 		//nbinsx = data_obs->GetNbinsX();
-		loopBin(data_obs,nbinsx,"dataobs",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(ttbar,nbinsx,"ttbar",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(ST,nbinsx,"ST",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(ZDY,nbinsx,"ZDY",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(DB,nbinsx,"DB",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(Wjets,nbinsx,"Wjets",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(TB,nbinsx,"TB",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(QCD,nbinsx,"QCD",regionfile,str_list[i],CHANNELNUM, nj);
-		loopBin(bgsum, nbinsx, "all-bkg",regionfile,str_list[i],CHANNELNUM, nj);
-/*		loopBin(TChiWZ_2750268,nbinsx,"WZ2750268",regionfile);
+		//
+		for(int i=0; i<hist_grid.size(); i++){
+                        if(hist_grid.at(i) != NULL){
+                                nbinsx = hist_grid.at(i)->GetNbinsX();
+                                break;
+                        }
+                }
+
+		//nbinsx = hist_grid[0]->GetNbinsX();
+		for(int j=0; j<hist_grid.size(); j++){
+			//std::string hname(hist_grid[j]->GetName());
+			loopBin(hist_grid[j],nbinsx,grid_hnames[j],regionfile,str_list[i],CHANNELNUM,nj);
+		}
+	/*	loopBin(data_obs,nbinsx,"dataobs",regionfile);
+		loopBin(ttbar,nbinsx,"ttbar",regionfile);
+		loopBin(ST,nbinsx,"ST",regionfile);
+		loopBin(ZDY,nbinsx,"ZDY",regionfile);
+		loopBin(DB,nbinsx,"DB",regionfile);
+		loopBin(Wjets,nbinsx,"Wjets",regionfile);
+		loopBin(TB,nbinsx,"TB",regionfile);
+		loopBin(QCD,nbinsx,"QCD",regionfile);
+		loopBin(bgsum, nbinsx, "all-bkg",regionfile);
+		loopBin(TChiWZ_2750268,nbinsx,"WZ2750268",regionfile);
 		loopBin(TChiWZ_2750235,nbinsx,"WZ2750235",regionfile);
 		loopBin(TChiWZ_2750183,nbinsx,"WZ2740183",regionfile);
 		loopBin(TChiWZ_2000190,nbinsx,"WZ2000190",regionfile);
@@ -413,7 +412,7 @@ void macroBG(std::string chnlName, int chnlnum){
 		loopBin(T2bW_3500270,nbinsx,"bW3500270",regionfile);
 		loopBin(T2bW_3500300,nbinsx,"bW3500300",regionfile);
 		loopBin(T2bW_3500340,nbinsx,"bW3500340",regionfile);
-*/	
+	*/
 		regionfile.close();			
 //		if(i == 10)	break;
 //		break;
@@ -423,10 +422,10 @@ void macroBG(std::string chnlName, int chnlnum){
 //	TList* hlist = hdir->GetListOfKeys();
 //	hlist->Print();
 
-	TH1D* data_obs = (TH1D*) f->Get((str_list[0]+"/data_obs").c_str());
+	//TH1D* data_obs = (TH1D*) f->Get((str_list[0]+"/data_obs").c_str());
 //	data_obs->Draw();
-
-	TH1D* sig = (TH1D*) f->Get("Ch2L_OSmumu_muGmuG_0j0svS_ge1j0bISR_PTISR0_gamT0/TChiWZ_2750268");
+//	da
+	//TH1D* sig = (TH1D*) f->Get("Ch2L_OSmumu-muGmuG-0j0svS-ge1j0bISR-PTISR0-gamT0/TChiWZ_2750268");
 	
 //	sig->Draw();
 	set<std::string >::iterator itr;
