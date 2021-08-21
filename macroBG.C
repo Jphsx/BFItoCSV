@@ -14,14 +14,58 @@ vector<string> split (const string &s, char delim) {
 
     return result;
 }
-TH1D* collectBG(TFile* f, std::string bname){
+TH1D* collectBG(TFile* f, std::string bname, std::string regiondir, std::string proc){
 //name of processes
 //ttbar ST ZDY DB Wjets TB QCD
 	TH1D* bg = (TH1D*) f->Get(bname.c_str());
-	TH1D* bgelf0 =(TH1D*) f->Get( (bname+"_Fakes_elf0").c_str() );
-	TH1D* bgelf1 =(TH1D*) f->Get( (bname+"_Fakes_elf1").c_str() );
-	TH1D* bgmuf0 =(TH1D*) f->Get( (bname+"_Fakes_muf0").c_str() );
-	TH1D* bgmuf1 =(TH1D*) f->Get( (bname+"_Fakes_muf1").c_str() );
+	//TH1D* bgelf0 =(TH1D*) f->Get( (bname+"_Fakes_elf0").c_str() );
+	//TH1D* bgelf1 =(TH1D*) f->Get( (bname+"_Fakes_elf1").c_str() );
+	//TH1D* bgmuf0 =(TH1D*) f->Get( (bname+"_Fakes_muf0").c_str() );
+	//TH1D* bgmuf1 =(TH1D*) f->Get( (bname+"_Fakes_muf1").c_str() );
+
+	//find all fake hists
+	TDirectory* rdir = (TDirectory*) f->Get(regiondir.c_str());
+	TList* lst = rdir->GetListOfKeys();
+	std::set<const char*> keyset{};
+	for(int i=0; i<lst->GetSize(); i++){
+		keyset.insert(lst->At(i)->GetName());
+	}
+	/*for(auto const &i: keyset){
+	 std::cout<<i<<std::endl;
+	}
+	*/
+	std::set<const char*> subset{};
+	for(auto const &i: keyset){
+		bool Process=false;
+		bool Fake=false;
+		std::string hname(i);
+		//std::cout<<"scanning for "<<proc<<" "<<hname<<" ";
+                std::size_t found1 = hname.find(proc);
+                std::size_t found2 = hname.find("Fakes");
+                if(found1!=std::string::npos) Process=true;
+                if(found2!=std::string::npos) Fake=true;
+                if(Process && Fake){//std::cout<<" TRUE \n";
+			subset.insert(i);  //erase is segfaulting?? this didnt happen in tests.. root version?  
+		}
+                else{
+			//std::cout<<" FALSE \n";
+                       // keyset.erase(i);//erase elements that dont trigger both bools
+                }
+	}//end keyset loop
+/*	std::cout<<"POST REMOVAL\n";
+        for(auto const &i: subset){
+		std::cout<<i<<std::endl;
+	}
+	std::cout<<"end subset\n";
+*/
+	//loop keyset get all TH1D*
+	std::vector<TH1D*> hists{};
+	hists.push_back(bg);
+	for(auto const &i: subset){
+		//std::cout<<i<<std::endl;
+		std::string key(i);
+		hists.push_back( (TH1D*) f->Get( (regiondir+"/"+key).c_str() ) );
+	}
 
 	TH1D* h = NULL;
 	/*if(bg != NULL) h = bg;
@@ -32,7 +76,7 @@ TH1D* collectBG(TFile* f, std::string bname){
 	if(bgmuf1 != NULL) h->Add(bgmuf1);	
 	*/
 	//loop and find a non null hist
-	std::vector<TH1D*> hists = { bg, bgelf0, bgelf1, bgmuf0, bgmuf1 };
+	//std::vector<TH1D*> hists = { bg, bgelf0, bgelf1, bgmuf0, bgmuf1 };
 	int I=-1;
 	for(int i=0; i<hists.size(); i++){
 		if(hists.at(i) != NULL){
@@ -265,22 +309,7 @@ void unrollBins(vector<vector<double> > bins, ofstream& fstream ){
 void macroBG(std::string chnlName, int chnlnum){
 	//
 	//read in TCHIWZ which has BG rolled into it for bg readouts	
-//	TFile* f = TFile::Open("BFS_TChiWZ.root");
-//	TFile* f = TFile::Open("BFS_TChiWZ_MBIN2.root");
-//        TFile* f = TFile::Open("BFS_2l2J_MBINAdjust.root");
-//	TFile* f = TFile::Open("BFS_2L_1j2j3jconsol_TChiWZ.root");
-//        TFile* f = TFile::Open("BFI_B1-2_2016.root");
-//	TFile* f = TFile::Open("BFI_B4-2_2018.root");
-	//TFile* f = TFile::Open("./BFS_2L1J_Consolidation/BFS_B1-3_TChiWZ.root");
-	//TFile* f = TFile::Open("./BFS_2L1J_Consolidation/BFS_B2-2_TChiWZ.root");
-//	TFile* f = TFile::Open("./BFS_2L1J_Consolidation/BFS_B1-1_TChiWZ.root");
-//	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-4_TChiWZ.root");
-//	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-5_BKG.root");
-//	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-6_BKG.root");
-	TFile* f = TFile::Open("./BFS_New_Nominal/BFS_B1-7_TChiWZ.root");
-//	TFile* f2 = TFile::Open("BFI_batch_T2tt_all.root");
-//	TFile* f3 = TFile::Open("BFI_batch_TSlepSlep_all.root");
-//	TFile* f4 = TFile::Open("BFI_batch_T2bW_all.root");
+	TFile* f = TFile::Open("B5-1_BFS/BFS_B5-1_TChiWZ17.root");
 
 	TList* list = f->GetListOfKeys();
 //	TList* list2 = f2->GetListOfKeys();
@@ -346,13 +375,13 @@ void macroBG(std::string chnlName, int chnlnum){
 //modify for this to collect only BG	
 		TH1D* data_obs = (TH1D*) f->Get((str_list[i]+"/data_obs").c_str());
 //		ttbar ST ZDY DB Wjets TB QCD
-		TH1D* ttbar = collectBG(f,str_list[i]+"/ttbar");
-		TH1D* ST    = collectBG(f, str_list[i]+"/ST");
-		TH1D* ZDY   = collectBG(f, str_list[i]+"/ZDY");
-		TH1D* DB    = collectBG(f, str_list[i]+"/DB");
-		TH1D* Wjets = collectBG(f, str_list[i]+"/Wjets");
-		TH1D* TB    = collectBG(f, str_list[i]+"/TB");
-		TH1D* QCD   = collectBG(f, str_list[i]+"/QCD");
+		TH1D* ttbar = collectBG(f,str_list[i]+"/ttbar",str_list[i],"ttbar_");
+		TH1D* ST    = collectBG(f, str_list[i]+"/ST",str_list[i],"ST_");
+		TH1D* ZDY   = collectBG(f, str_list[i]+"/ZDY",str_list[i],"ZDY_");
+		TH1D* DB    = collectBG(f, str_list[i]+"/DB",str_list[i],"DB_");
+		TH1D* Wjets = collectBG(f, str_list[i]+"/Wjets",str_list[i],"Wjets_");
+		TH1D* TB    = collectBG(f, str_list[i]+"/TB",str_list[i],"TB_");
+		TH1D* QCD   = collectBG(f, str_list[i]+"/QCD",str_list[i],"QCD_");
 		
 		vector<TH1D*> allbgs = {ttbar, ST, ZDY, DB, Wjets, TB, QCD};
 		TH1D* bgsum = sumBG(allbgs);
