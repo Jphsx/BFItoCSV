@@ -21,7 +21,8 @@ import sys
 import csv
 #create dictionary
 binmap={}
-with open('bindict_newmbins3.csv', mode='r') as infile:
+with open('bindict_b51.csv', mode='r') as infile:
+#with open('bindict_b53.csv', mode='r') as infile:
     reader = csv.reader(infile, delimiter=' ')
     binmap = {rows[0]:rows[1:] for rows in reader}
 
@@ -35,7 +36,21 @@ del binmap['binKey']
 
 #signal= sys.argv[1]
 
-all_bg_files = glob.glob("./BG_2l1j2j3j/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_2l1j2j3j/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_5-1_16/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_5-1_17/BG_*L/*.csv")
+
+#all_bg_files = glob.glob("./BG_5-1_18/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_5-2/BG_*L/*.csv")
+
+#all_bg_files = glob.glob("./BG_6-1_17/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_6-2_17/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_7-2_17/BG_*L/*.csv")
+
+#all_bg_files = glob.glob("./BG_5-3_17/BG_*L/*.csv")
+#all_bg_files = glob.glob("./BG_5-5_17/BG_*L/*.csv")
+all_bg_files = glob.glob("./BG_BT-1_17/BG_*L/*.csv")
+
 #all_s_files = glob.glob("csv2/"+signal+"_*L/*.csv")
 
 pd.set_option('display.max_colwidth',None)
@@ -89,6 +104,8 @@ allbgframe['idx']=allbgframe['BinN'].astype(str) + allbgframe.RegionName
 #add binning
 allbgframe['binKey'] = allbgframe['NL'].astype(int).astype(str)+"_"+allbgframe['NJ'].astype(int).astype(str)+"_"+allbgframe['BinN'].astype(int).astype(str)
 allbgframe['BinEdges'] = allbgframe['binKey'].map(binmap)
+#print(allbgframe[['binKey','BinEdges']])
+
 #print(allbgframe)
 #exit()
 #map binedges into individual columns
@@ -100,15 +117,15 @@ allbgframe = allbgframe[ ['RegionName','BinN','NL','NJ','Yield','Error','Rlow','
 allbgframe['Rel Err'] = allbgframe.Error/allbgframe.Yield
 allbgframe['Yield'] = allbgframe['Yield'].round(4)
 
-allbgframe = allbgframe.loc[ (allbgframe['NL'] == 2) ]
-allbgframe = allbgframe.loc[ (allbgframe['NJ'] == 3) ]
+#allbgframe = allbgframe.loc[ (allbgframe['NL'] == 2) ]
+#allbgframe = allbgframe.loc[ (allbgframe['NJ'] == 3) ]
 #allbgframe = allbgframe.loc[ (allbgframe['NJ'] == 1) ]
 
 #test stuff to simplify
 #allbgframe = allbgframe.loc[ (allbgframe['RegionName'].str.contains("OSSHelel")) ] 
 
 #allbgframe = allbgframe.loc[ allbgframe['RegionName'].str.contains("bS",case=True) ]
-allbgframe = allbgframe[ ['RegionName','BinN','NJ','Yield'] ]
+#allbgframe = allbgframe[ ['RegionName','BinN','NJ','Yield'] ]
 
 
 #uncomment for removing bsplit from 1J
@@ -120,16 +137,29 @@ allbgframe = allbgframe[ ['RegionName','BinN','NJ','Yield'] ]
 #allbgframe['RegionName'] = allbgframe['RegionName'].str.replace("ge1bS","")
 
 #allbgframe = allbgframe.groupby(['RegionName','BinN'])['Yield'].sum()
+print("Full shape")
 print(allbgframe.shape)
-print(allbgframe)
+
+#print(allbgframe)
 #allbgframe = allbgframe.reset_index()
+print("0.1< Yield < 1")
+subframe = allbgframe.loc[((allbgframe['Yield']<1)  & (allbgframe['Yield']>0.1)) ]
+subframe['Yield'] = subframe['Yield'].round(5)
+print(subframe.shape)
+print(subframe)
 
-print("ZEROS PRESENT?")
-allbgframe = allbgframe.loc[ ((allbgframe['Yield']==0)) ]
-print(allbgframe.shape)
-print(allbgframe)
+print("0.01 < Yield < 0.1")
+subframe2 = allbgframe.loc[((allbgframe['Yield']<0.1)  & (allbgframe['Yield']>0.01)) ]
+subframe2['Yield'] = subframe2['Yield'].round(5)
+print(subframe2.shape)
+print(subframe2)
 
 
+print("0 < Yield < 0.01")
+subframe3 = allbgframe.loc[((allbgframe['Yield']<0.01)) ]
+subframe3['Yield'] = subframe3['Yield'].round(5)
+print(subframe3.shape)
+print(subframe3)
 
 
 

@@ -64,7 +64,8 @@ void printRBins(int lep, int jet, std::vector<RBin> RBins, ofstream& f ){
 }	
 void populateBins( int Nlep, int index, std::vector<RBin>& RBins ){
 bool maskSR= false;
-if(Nlep == 0){
+
+  if(Nlep == 0){
     if(index == 0){
       RBins.push_back(RBin(0.95,  0.985, VD().a(0.).a(40.)));
       if(!maskSR)
@@ -161,18 +162,22 @@ if(Nlep == 0){
   if(Nlep == 2){
     if(index == 0){
        RBins.push_back(RBin(0.7,   0.8,   VD().a(0.).a(40.).a(120.)));
-       RBins.push_back(RBin(0.8,   0.9,   VD().a(0.).a(30.).a(70).a(120.)));//new mbin 70
+       RBins.push_back(RBin(0.8,   0.9,   VD().a(0.).a(30.).a(120.)));
+       //RBins.push_back(RBin(0.8,   0.9,   VD().a(0.).a(30.).a(70.).a(120.))); // 5-3
        if(!maskSR){
-         RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(20.).a(50).a(120.)));//new mbin 50
+         RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(20.).a(120.)));
+	//RBins.push_back(RBin(0.9,   0.95,  VD().a(0.).a(20.).a(50.).a(120.)));//5-3
          RBins.push_back(RBin(0.95,  1.0,   VD().a(0.).a(15.).a(120.)));
        }
     }
     if(index == 1){
       RBins.push_back(RBin(0.55,  0.7,  VD().a(0.).a(80.).a(200.)));
-      RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(60.).a(120).a(200.)));//new mbin 120
+      RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(60.).a(200.)));
+     // RBins.push_back(RBin(0.7,   0.8,  VD().a(0.).a(60.).a(120.).a(200.)));//5-3
       if(!maskSR){
-        RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(40.).a(100).a(200.)));//new mbin 100
-        RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(30.).a(200.)));
+        RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(40.).a(200.)));
+     //  RBins.push_back(RBin(0.8,   0.9,  VD().a(0.).a(40.).a(100.).a(200.)));//5-3
+	  RBins.push_back(RBin(0.9,   1.0,  VD().a(0.).a(30.).a(200.)));
       }
     }
     if(index == 2){
@@ -191,8 +196,6 @@ if(Nlep == 0){
       }
     }
   }
-
-
 
   if(Nlep == 3){
     if(index == 0){
@@ -216,6 +219,7 @@ if(Nlep == 0){
 
 
 
+
 }
 
 
@@ -225,7 +229,8 @@ void createBinDict(){
 //	populateBins(0,1,RBins);
 //	printRBins(0, 1, RBins );
 	ofstream f;
-	f.open("bindict_newmbins.csv");
+	f.open("bindict_b51.csv");
+	//f.open("bindict_b53.csv");
 	f<<"binKey Rlow Rhigh Mplow Mphigh\n";
 	for(int lep=0; lep<=3; lep++){
 		for(int jet=0;jet<=5; jet++){

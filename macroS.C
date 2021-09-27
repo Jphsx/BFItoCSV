@@ -115,12 +115,15 @@ int IDJets( std::string jstring ){
 	std::size_t found3 = jstring.find("3j");
 	std::size_t found4 = jstring.find("4j");
 	std::size_t found5 = jstring.find("5j");
+	std::size_t found6 = jstring.find("inclS");
 	if(found0!=std::string::npos) return 0;
 	if(found1!=std::string::npos) return 1;
 	if(found2!=std::string::npos) return 2;
 	if(found3!=std::string::npos) return 3;
 	if(found4!=std::string::npos) return 4;
 	if(found5!=std::string::npos) return 5;
+	if(found6!=std::string::npos) return 0;//this may need to be different (returning 0j for 3L SSS inclS)
+
 	return -1;
 }
 
