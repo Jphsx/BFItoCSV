@@ -11,7 +11,9 @@ SIGNAL=$1
 #SIGNAL="T5tttt"
 #SIGNAL="TChipmWW"
 
-ROOTNAME="BFS_"$SIGNAL"_s.root"
+#ROOTNAME="./B5-1_BFS/BFS_B5-1_"$SIGNAL"17.root"
+ROOTNAME="./9-14-21_BFS/BFS_BT-1_"$SIGNAL"17.root"
+#/home/justin/work/research/susy/6-29-21/BFItoCSV/9-14-21_BFS/BFS_BT-1_T2bW17.root
 
 DIRNAME=$SIGNAL"_0L"
 rm -rf $DIRNAME

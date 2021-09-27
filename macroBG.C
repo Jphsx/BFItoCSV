@@ -159,12 +159,14 @@ int IDJets( std::string jstring ){
 	std::size_t found3 = jstring.find("3j");
 	std::size_t found4 = jstring.find("4j");
 	std::size_t found5 = jstring.find("5j");
+	std::size_t found6 = jstring.find("inclS");
 	if(found0!=std::string::npos) return 0;
 	if(found1!=std::string::npos) return 1;
 	if(found2!=std::string::npos) return 2;
 	if(found3!=std::string::npos) return 3;
 	if(found4!=std::string::npos) return 4;
 	if(found5!=std::string::npos) return 5;
+	if(found6!=std::string::npos) return 0;//this may need to be different (returning 0j for 3L SSS inclS)
 	return -1;
 }
 
@@ -309,7 +311,19 @@ void unrollBins(vector<vector<double> > bins, ofstream& fstream ){
 void macroBG(std::string chnlName, int chnlnum){
 	//
 	//read in TCHIWZ which has BG rolled into it for bg readouts	
-	TFile* f = TFile::Open("B5-1_BFS/BFS_B5-1_TChiWZ17.root");
+	//
+	//TFile* f = TFile::Open("B5-1_BFS/BFS_B5-1_TChiWZ17.root");
+	//TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-1_TChiWZ16.root");
+        //TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-1_TChiWZ17.root");
+       // TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-1_TChiWZ18.root");
+      //  TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-2_T2bW.root");
+//	 TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B6-1_TChiWZ17.root");
+//	 TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B5-3_TChiWZ17.root");
+//	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B5-5_TChiWZ17.root");
+//	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B6-2_TChiWZ17.root");
+//	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B7-2_TChiWZ17.root");
+	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-14-21_BFS/BFS_BT-1_TChiWZ17.root");
+
 
 	TList* list = f->GetListOfKeys();
 //	TList* list2 = f2->GetListOfKeys();
