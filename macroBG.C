@@ -38,13 +38,18 @@ TH1D* collectBG(TFile* f, std::string bname, std::string regiondir, std::string 
 	for(auto const &i: keyset){
 		bool Process=false;
 		bool Fake=false;
+		bool Variations=false;
 		std::string hname(i);
 		//std::cout<<"scanning for "<<proc<<" "<<hname<<" ";
                 std::size_t found1 = hname.find(proc);
                 std::size_t found2 = hname.find("Fakes");
+                std::size_t found3 = hname.find("RISR");
+                std::size_t found4 = hname.find("Mperp");
                 if(found1!=std::string::npos) Process=true;
                 if(found2!=std::string::npos) Fake=true;
-                if(Process && Fake){//std::cout<<" TRUE \n";
+                if(found3!=std::string::npos) Variations=true;
+                if(found4!=std::string::npos) Variations=true;
+                if(Process && Fake && !Variations){//std::cout<<" TRUE \n";
 			subset.insert(i);  //erase is segfaulting?? this didnt happen in tests.. root version?  
 		}
                 else{
@@ -322,8 +327,9 @@ void macroBG(std::string chnlName, int chnlnum){
 //	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B5-5_TChiWZ17.root");
 //	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B6-2_TChiWZ17.root");
 //	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B7-2_TChiWZ17.root");
-	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-14-21_BFS/BFS_BT-1_TChiWZ17.root");
-
+	//TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-14-21_BFS/BFS_BT-1_TChiWZ17.root");
+	//TFile* f = TFile::Open("FitInput_KUEWKino_2017.root");
+	TFile* f = TFile::Open("BFS_B12-2_TChiWZ17.root");
 
 	TList* list = f->GetListOfKeys();
 //	TList* list2 = f2->GetListOfKeys();
