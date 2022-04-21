@@ -1,4 +1,11 @@
-
+# Instructions on running zero finding tools
+- (1) Make CSV files
+	- update run_runBG.sh and put in your root files and output directory
+	- do ./run_runBG.sh
+	
+- (2) Analyze CSV files (you will need pandas)
+	- update run_zero_finder.sh, put in csv directory from the last step and output text file name
+	- do ./run_zero_Finder.sh  
 
 
 # Overview

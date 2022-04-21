@@ -313,23 +313,11 @@ void unrollBins(vector<vector<double> > bins, ofstream& fstream ){
 	}
 	fstream<<std::endl;
 }
-void macroBG(std::string chnlName, int chnlnum){
+void macroBG(std::string chnlName, int chnlnum, std::string BFIname){
 	//
 	//read in TCHIWZ which has BG rolled into it for bg readouts	
-	//
-	//TFile* f = TFile::Open("B5-1_BFS/BFS_B5-1_TChiWZ17.root");
-	//TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-1_TChiWZ16.root");
-        //TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-1_TChiWZ17.root");
-       // TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-1_TChiWZ18.root");
-      //  TFile* f = TFile::Open("/home/justin/work/research/susy/8-22-21/BFS/BFS_B5-2_T2bW.root");
-//	 TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B6-1_TChiWZ17.root");
-//	 TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B5-3_TChiWZ17.root");
-//	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B5-5_TChiWZ17.root");
-//	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B6-2_TChiWZ17.root");
-//	TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-7-21_BFS/BFS_B7-2_TChiWZ17.root");
-	//TFile* f = TFile::Open("/home/justin/work/research/susy/6-29-21/BFItoCSV/9-14-21_BFS/BFS_BT-1_TChiWZ17.root");
-	//TFile* f = TFile::Open("FitInput_KUEWKino_2017.root");
-	TFile* f = TFile::Open("BFS_B12-2_TChiWZ17.root");
+
+	TFile* f = TFile::Open(BFIname.c_str());
 
 	TList* list = f->GetListOfKeys();
 //	TList* list2 = f2->GetListOfKeys();
