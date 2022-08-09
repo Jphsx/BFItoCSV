@@ -45,10 +45,14 @@ TH1D* collectBG(TFile* f, std::string bname, std::string regiondir, std::string 
                 std::size_t found2 = hname.find("Fakes");
                 std::size_t found3 = hname.find("RISR");
                 std::size_t found4 = hname.find("Mperp");
+                std::size_t found5 = hname.find("BTAG");
+                std::size_t found6 = hname.find("TRIG");
                 if(found1!=std::string::npos) Process=true;
                 if(found2!=std::string::npos) Fake=true;
                 if(found3!=std::string::npos) Variations=true;
                 if(found4!=std::string::npos) Variations=true;
+                if(found5!=std::string::npos) Variations=true;
+                if(found6!=std::string::npos) Variations=true;
                 if(Process && Fake && !Variations){//std::cout<<" TRUE \n";
 			subset.insert(i);  //erase is segfaulting?? this didnt happen in tests.. root version?  
 		}
